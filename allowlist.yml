@@ -1,0 +1,11 @@
+# Repository Integrity Engine: Safety Allowlist
+# Paths listed here will be granted REAL read/write permissions.
+
+permitted_paths:
+  - "/tmp"
+  - "reports"
+  - ".gemini"
+
+permitted_domains:
+  - "localhost"
+  - "127.0.0.1"
