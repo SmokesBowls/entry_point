@@ -31,6 +31,9 @@ def main():
     parser.add_argument("--k", type=int, default=10, help="Max entrypoints to return")
     parser.add_argument("--target", help="Optional target scope (engine, tools, global)")
     parser.add_argument("--prune", action="store_true", help="Generate a safe pruning plan and script")
+    parser.add_argument("--trace-mode", choices=["full", "import-only", "auto"], default="auto", help="Trace strategy: full execution, import-only execution, or auto (import-only for infrastructure_boot)")
+    parser.add_argument("--trace-timeout", type=int, default=60, help="Default timeout per entrypoint trace in seconds")
+    parser.add_argument("--boot-timeout", type=int, default=180, help="Timeout override for infrastructure_boot entrypoints in seconds")
     
     # Safety Flags
     parser.add_argument("--no-safe", action="store_false", dest="safe", help="Disable Simulation Mode")
@@ -87,9 +90,25 @@ def main():
     # 2. Trace
     runtime_files = set()
     relations = []
+    trace_meta = {"trace_mode": "disabled", "timeouts": [], "default_timeout": args.trace_timeout, "boot_timeout": args.boot_timeout, "entrypoints": []}
     if not args.no_trace and entrypoints:
+        hint_tagger = EntryTagger(repo_root)
+        entrypoint_hints = {}
+        for ep in entrypoints:
+            rel = str(ep.relative_to(repo_root))
+            intent = hint_tagger._get_intent(rel)
+            role, _, _ = hint_tagger._infer_role(rel)
+            entrypoint_hints[rel] = role if intent == "runtime" else f"intent:{intent}"
+
         tracer = RuntimeTracer(repo_root)
-        runtime_files, relations = tracer.run_trace(list(entrypoints), safe=args.safe)
+        runtime_files, relations, trace_meta = tracer.run_trace(
+            list(entrypoints),
+            safe=args.safe,
+            default_timeout=args.trace_timeout,
+            boot_timeout=args.boot_timeout,
+            trace_mode=args.trace_mode,
+            entrypoint_hints=entrypoint_hints,
+        )
 
     # 3. Static/Text
     analyzer = StaticAnalyzer(repo_root)
@@ -167,59 +186,98 @@ def main():
         cartography_data={"folders": folders, "domains": domains},
         triangulation_data=triangulation_output,
         policy_data=violations,
-        metadata=metadata
+        metadata={**metadata, "trace": trace_meta, "engine_scope": engine_scopes}
     )
 
     # v2.1 Default Output Footer
     print("-" * 79)
     print("✅ Scan complete. Recommended next steps:")
     print("-" * 79)
-    print("\n🔹 Start the engine")
-    print("These are the confirmed main entrypoints for this repository:\n")
-    
-    main_count = 0
-    engine_paths = set()
-    for ep in classified_entrypoints:
-        is_main_role = ep["role"] in ["infrastructure_boot", "core_logic_driver", "tooling_cli"]
-        if is_main_role and ep.get("eligible_for_primary", True):
-            main_count += 1
-            engine_paths.add(ep["path"])
-            conf = int(ep["primary_candidate_score"] * 100)
-            print(f"{main_count}. {ep['path']:<50} confidence: {conf}%")
-            if main_count >= 5: break
 
-    if main_count == 0:
+    runtime_candidates = []
+    low_confidence_reasons = []
+    if trace_meta.get("timeouts"):
+        low_confidence_reasons.append(f"trace timeouts: {len(trace_meta['timeouts'])}")
+    if len(engine_scopes) != 1 or engine_scopes[0] == ".":
+        low_confidence_reasons.append("broad or mixed runtime scope")
+
+    for ep in classified_entrypoints:
+        role = ep["role"]
+        intents = set(ep.get("intent_tags", []))
+        is_runtime = "intent:runtime" in intents
+        gated_role = role in ["infrastructure_boot", "core_logic_driver", "tooling_cli"]
+        if gated_role and is_runtime and ep.get("eligible_for_primary", True):
+            runtime_candidates.append(ep)
+
+    runtime_candidates = sorted(runtime_candidates, key=lambda x: x.get("primary_candidate_score", 0), reverse=True)
+    top_conf = runtime_candidates[0]["primary_candidate_score"] if runtime_candidates else 0.0
+    confidence_ok = top_conf >= 0.7 and not low_confidence_reasons
+
+    print("\n🔹 Start the engine")
+    if confidence_ok:
+        print("These are the confirmed main entrypoints for this repository:\n")
+    else:
+        print("Low-confidence candidates for runtime engine entrypoints:\n")
+        reason = ", ".join(low_confidence_reasons) if low_confidence_reasons else "insufficient trace signal"
+        print(f"Reason: {reason}\n")
+
+    engine_paths = set()
+    for idx, ep in enumerate(runtime_candidates[:5], start=1):
+        engine_paths.add(ep["path"])
+        conf = int(ep["primary_candidate_score"] * 100)
+        print(f"{idx}. {ep['path']:<50} confidence: {conf}%")
+
+    if not runtime_candidates:
         print(" (No primary engine entrypoints identified)")
 
-    print(f"\nRun a full deep trace:")
-    if classified_entrypoints:
-        print(f"  uacf trace {classified_entrypoints[0]['path']}")
-    
-    print("-" * 79)
+    print("\n🔹 Next steps decision tree\n")
+    if trace_meta.get("timeouts"):
+        print(" - Bootstrap timed out: rerun with --trace-mode import-only or increase --boot-timeout.")
+    if len(engine_scopes) > 1:
+        print(" - Multiple runtime surfaces detected: pick a runtime root and rerun with --target <root>.")
+        for root in engine_scopes[:5]:
+            print(f"   • {root}")
+    print(f" - Always review trace mode: {trace_meta.get('trace_mode', 'unknown')}")
+    print(f" - Always review inferred engine scope: {', '.join(engine_scopes)}")
+    if trace_meta.get("timeouts"):
+        print(" - Top timeouts:")
+        for t in trace_meta.get("timeouts", [])[:5]:
+            print(f"   • {t}")
+
     print("\n🔹 Available tools\n")
-    
-    # List tools (non-engine entrypoints)
+
     tools = []
     for ep in classified_entrypoints:
-        if ep["path"] in engine_paths: continue
-        if ep["role"] == "test_harness" or "test" in ep["path"].lower(): continue
-        # Only show things with some behavioral signature or non-engine scope
-        if ep["role"] != "unknown" or ep.get("in_engine_scope") == False:
+        if ep["path"] in engine_paths:
+            continue
+        if ep["role"] == "test_harness" or "test" in ep["path"].lower():
+            continue
+        if ep["role"] != "unknown" or ep.get("in_engine_scope") is False:
             tools.append(ep)
 
     if tools:
-        # Group by folder/domain
         by_domain = {}
         for t in tools:
             p1_entry = next((i for i in p1_temp_data if i["file"] == t["path"]), {})
             dom = p1_entry.get("domain", "tools")
             by_domain.setdefault(dom, []).append(t["path"])
-        
+
         for dom, files in sorted(by_domain.items()):
             if files and dom != "unknown":
                 print(f" {dom:<20}: {files[0]}")
     else:
-        print(" (No auxiliary tools identified)")
+        cli_tools = [ep for ep in classified_entrypoints if ep["role"] == "tooling_cli" and "test" not in ep["path"].lower()]
+        inferred_tools = {}
+        for ep in cli_tools:
+            p = ep["path"]
+            cluster = p.split("/")[0] if "/" in p else "."
+            inferred_tools.setdefault(cluster, []).append(p)
+
+        if inferred_tools:
+            for dom, files in sorted(inferred_tools.items()):
+                print(f" {dom:<20}: {files[0]}")
+        else:
+            print(" (No auxiliary tools identified)")
 
     print("-" * 79)
     print("\n🔹 Issues found\n")
@@ -229,7 +287,23 @@ def main():
     shadowed = len(violations.get("shadowed_modules", []))
     print(f" {shadowed:<3} shadowed modules")
 
-    print(f"\nView full interactive report: uacf report")
+    if engine_scopes and engine_scopes != ["."]:
+        scope_target = {
+            rec["file"]
+            for rec in p1_temp_data
+            if any(rec["file"] == s or rec["file"].startswith(s + "/") for s in engine_scopes)
+        }
+        scope_covered = len(
+            scope_target.intersection({
+                r["file"] for r in p1_temp_data if "runtime_trace" in r.get("evidence", []) or r["status"] == "ACTIVE"
+            })
+        )
+        scope_ratio = (scope_covered / len(scope_target)) if scope_target else 0.0
+        print(f" Engine coverage (scoped): {scope_ratio:.1%} over inferred engine_scope")
+    else:
+        print(" Global driver coverage reported (engine_scope unresolved)")
+
+    print("\nView full interactive report: uacf report")
     print("-" * 79)
 
 if __name__ == "__main__":
