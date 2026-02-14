@@ -213,32 +213,60 @@ def main():
     top_conf = runtime_candidates[0]["primary_candidate_score"] if runtime_candidates else 0.0
     confidence_ok = top_conf >= 0.7 and not low_confidence_reasons
 
-    print("\n🔹 Start the engine")
-    if confidence_ok:
-        print("These are the confirmed main entrypoints for this repository:\n")
-    else:
-        print("Low-confidence candidates for runtime engine entrypoints:\n")
-        reason = ", ".join(low_confidence_reasons) if low_confidence_reasons else "insufficient trace signal"
-        print(f"Reason: {reason}\n")
+    def build_recommendation(entry):
+        role = entry.get("role", "unknown")
+        if role == "infrastructure_boot":
+            return {"label": "boot", "guidance": "Start here when validating runtime boot/host behavior."}
+        if role == "core_logic_driver":
+            return {"label": "core", "guidance": "Use for logic-centric runtime execution and state flow checks."}
+        if role == "tooling_cli":
+            return {"label": "cli", "guidance": "Use for CLI-driven runtime flows; verify required arguments first."}
+        return {"label": "candidate", "guidance": ""}
 
+    print("\n🔹 Start the engine")
+
+    # runtime_candidates is already role/intent gated and sorted by primary_candidate_score
     engine_paths = set()
-    for idx, ep in enumerate(runtime_candidates[:5], start=1):
-        engine_paths.add(ep["path"])
-        conf = int(ep["primary_candidate_score"] * 100)
-        print(f"{idx}. {ep['path']:<50} confidence: {conf}%")
 
     if not runtime_candidates:
-        print(" (No primary engine entrypoints identified)")
+        print("No eligible runtime engine entrypoints were identified.\n")
+        if low_confidence_reasons:
+            print("Reason: " + ", ".join(low_confidence_reasons) + "\n")
+    else:
+        # Only call "confirmed" when confidence is strong AND we have no blocking reasons
+        if confidence_ok:
+            print("Confirmed runtime engine entrypoints:\n")
+        else:
+            print("Low-confidence runtime engine candidates:\n")
+            reason = ", ".join(low_confidence_reasons) if low_confidence_reasons else "insufficient trace signal"
+            print(f"Reason: {reason}\n")
+
+        for idx, ep in enumerate(runtime_candidates[:5], start=1):
+            engine_paths.add(ep["path"])
+            conf = int(ep.get("primary_candidate_score", 0.0) * 100)
+            rec = build_recommendation(ep)
+            label = rec.get("label", "candidate")
+            print(f"{idx}. {ep['path']:<50} confidence: {conf}% ({label})")
+            if rec.get("guidance"):
+                print(f"   ↳ {rec['guidance']}")
 
     print("\n🔹 Next steps decision tree\n")
+
+    # Explicit guidance for timeouts / import-only
     if trace_meta.get("timeouts"):
-        print(" - Bootstrap timed out: rerun with --trace-mode import-only or increase --boot-timeout.")
+        print(" - One or more boot candidates timed out.")
+        print("   Rerun with: --trace-mode import-only  OR raise: --boot-timeout <seconds>")
+
+    # Multi-surface guidance
     if len(engine_scopes) > 1:
-        print(" - Multiple runtime surfaces detected: pick a runtime root and rerun with --target <root>.")
+        print(" - Multiple runtime surfaces detected. Pick a root and rerun with --target <root>:")
         for root in engine_scopes[:5]:
             print(f"   • {root}")
-    print(f" - Always review trace mode: {trace_meta.get('trace_mode', 'unknown')}")
-    print(f" - Always review inferred engine scope: {', '.join(engine_scopes)}")
+
+    print(f" - Trace mode used: {trace_meta.get('trace_mode', 'unknown')}")
+    if engine_scopes:
+        print(f" - Inferred engine scope: {', '.join(engine_scopes)}")
+
     if trace_meta.get("timeouts"):
         print(" - Top timeouts:")
         for t in trace_meta.get("timeouts", [])[:5]:
@@ -248,11 +276,16 @@ def main():
 
     tools = []
     for ep in classified_entrypoints:
-        if ep["path"] in engine_paths:
+        p = ep.get("path", "")
+        if not p or p in engine_paths:
             continue
-        if ep["role"] == "test_harness" or "test" in ep["path"].lower():
+        # exclude tests
+        if ep.get("role") == "test_harness" or "test" in p.lower():
             continue
-        if ep["role"] != "unknown" or ep.get("in_engine_scope") is False:
+        intents = set(ep.get("intent_tags", []))
+        is_tools = "intent:tools" in intents or "intent:gui" in intents
+        out_of_engine = (ep.get("in_engine_scope") is False)
+        if is_tools or out_of_engine:
             tools.append(ep)
 
     if tools:
