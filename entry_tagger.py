@@ -67,6 +67,12 @@ class EntryTagger:
             if not in_engine_scope:
                 eligible = False
 
+            # Hard guardrails: never recommend archive/tests/docs/tool paths or validator/gui scripts as engine
+            lowered_path = path.lower()
+            forbidden_path_markers = ["archive/", "/archive/", "tests/", "/tests/", "validator", "validate", "gui", "ui"]
+            if (intent in ["archive", "tests", "docs", "tools"]) or any(m in lowered_path for m in forbidden_path_markers) or best_role == "test_harness":
+                eligible = False
+
             # primary_candidate_score = weighted blend of coverage and role suitability
             cov_ratio = coverage.get("cover_ratio", 0.0)
             role_suitability = min(1.0, scores.get(best_role, 0) / 12.0) if best_role != "unknown" else 0.0
