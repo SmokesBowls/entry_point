@@ -146,8 +146,10 @@ class Triangulator:
         chosen = []
         
         # 1. Take Primary Entrypoints
-        for i in range(min(len(ranked), cfg["primary_k"])):
-            ep = ranked[i]
+        eligible_ranked = [r for r in ranked if getattr(r, "in_engine_scope", True)]
+
+        for i in range(min(len(eligible_ranked), cfg["primary_k"])):
+            ep = eligible_ranked[i]
             reach = self.reach_cache.get(ep.path, set())
             gain = len(uncovered.intersection(reach))
             
@@ -166,7 +168,7 @@ class Triangulator:
             # Find best marginal gain from remaining
             best = None
             best_gain = -1
-            for r in ranked:
+            for r in eligible_ranked:
                 if any(c["path"] == r.path for c in chosen): continue
                 reach = self.reach_cache.get(r.path, set())
                 gain = len(uncovered.intersection(reach))
@@ -200,6 +202,7 @@ class Triangulator:
             "indegree": ep.indegree,
             "outdegree": ep.outdegree,
             "reach_nodes": ep.reach_nodes,
+            "in_engine_scope": getattr(ep, "in_engine_scope", True),
         }
 
     def greedy_topk(self, ranked: List[RankedEP], target: Set[str], k: int) -> Dict[str, Any]:

@@ -3,14 +3,22 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from typing import Set, List
+from typing import Set, List, Dict, Any, Tuple
 
 class RuntimeTracer:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root.resolve()
         self.trace_log_path = self.repo_root / "reports" / "runtime_trace.log"
 
-    def run_trace(self, entrypoints: List[Path], safe: bool = True) -> Set[Path]:
+    def run_trace(
+        self,
+        entrypoints: List[Path],
+        safe: bool = True,
+        default_timeout: int = 60,
+        boot_timeout: int = 180,
+        trace_mode: str = "full",
+        entrypoint_hints: Dict[str, str] = None,
+    ) -> Tuple[Set[Path], List[Tuple[str, int, str, str, int]], Dict[str, Any]]:
         """
         Runs the given entrypoints with a hardened sitecustomize.py tracer.
         Returns a set of all files loaded during execution.
@@ -190,6 +198,14 @@ atexit.register(flush_trace)
             })
 
             loaded_files = set()
+            trace_meta = {
+                "trace_mode": trace_mode,
+                "default_timeout": default_timeout,
+                "boot_timeout": boot_timeout,
+                "timeouts": [],
+                "entrypoints": []
+            }
+            entrypoint_hints = entrypoint_hints or {}
             for ep in entrypoints:
                 loaded_files.add(ep.resolve())
 
@@ -197,15 +213,49 @@ atexit.register(flush_trace)
                 entry = entry.resolve()
                 if entry.suffix == ".py":
                     print(f"Tracing entrypoint: {entry.relative_to(self.repo_root)}")
+                    rel = str(entry.relative_to(self.repo_root))
+                    hint = entrypoint_hints.get(rel, "unknown")
+                    effective_mode = "import-only" if (trace_mode == "auto" and hint == "infrastructure_boot") else trace_mode
+                    effective_timeout = boot_timeout if hint == "infrastructure_boot" else default_timeout
+                    cmd = [sys.executable, str(entry)]
+                    if effective_mode == "import-only":
+                        cmd = [
+                            sys.executable,
+                            "-c",
+                            (
+                                "import importlib.util; "
+                                f"spec=importlib.util.spec_from_file_location('rie_trace_target', r'{entry}'); "
+                                "mod=importlib.util.module_from_spec(spec); "
+                                "spec.loader.exec_module(mod)"
+                            )
+                        ]
+
                     try:
-                        subprocess.run(
-                            [sys.executable, str(entry)],
+                        completed = subprocess.run(
+                            cmd,
                             env=env,
                             cwd=str(self.repo_root),
-                            timeout=60,
+                            timeout=effective_timeout,
                             capture_output=True,
                             text=True
                         )
+                        trace_meta["entrypoints"].append({
+                            "path": rel,
+                            "hint": hint,
+                            "mode": effective_mode,
+                            "timeout_s": effective_timeout,
+                            "returncode": completed.returncode
+                        })
+                    except subprocess.TimeoutExpired:
+                        trace_meta["timeouts"].append(rel)
+                        trace_meta["entrypoints"].append({
+                            "path": rel,
+                            "hint": hint,
+                            "mode": effective_mode,
+                            "timeout_s": effective_timeout,
+                            "timed_out": True
+                        })
+                        print(f"  Trace interrupted: timeout after {effective_timeout}s")
                     except Exception as e:
                         print(f"  Trace interrupted: {e}")
 
@@ -241,14 +291,14 @@ atexit.register(flush_trace)
                                         loaded_files.add(full_path.resolve())
                             except:
                                 pass
-            return loaded_files, relations
+            return loaded_files, relations, trace_meta
 
 if __name__ == "__main__":
     import sys
     root_arg = sys.argv[1] if len(sys.argv) > 1 else "."
     eps = [Path(p) for p in sys.argv[2:]] if len(sys.argv) > 2 else []
     tracer = RuntimeTracer(Path(root_arg))
-    results = tracer.run_trace(eps)
+    results, _, _ = tracer.run_trace(eps)
     print(f"Captured {len(results)} files via relational tracing.")
     for r in results:
         print(f"  {r.relative_to(tracer.repo_root)}")
