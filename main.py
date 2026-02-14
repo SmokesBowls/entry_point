@@ -18,11 +18,22 @@ from policy_enforcer import PolicyEnforcer
 from pruning_engine import PruningEngine
 from domain_resolver import DomainResolver
 from scope_resolver import ScopeResolver
-import yaml
+from recommender import build_recommendation
 import json
 import uuid
 import hashlib
 from datetime import datetime
+
+
+def _yaml_safe_load(path: Path):
+    try:
+        import yaml  # type: ignore
+    except ImportError:
+        print("YAML config disabled (PyYAML not installed). Use JSON or install with: pip install pyyaml")
+        return None, False
+
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}, True
 
 def main():
     parser = argparse.ArgumentParser(description="Universal Active Code Filter (uacf)")
@@ -61,17 +72,21 @@ def main():
     domains_path = repo_root / "entrypoint_domains.yml"
     if domains_path.exists():
         try:
-            with open(domains_path, "r") as f:
-                domain_rules = yaml.safe_load(f) or {}
-        except: pass
+            loaded, ok = _yaml_safe_load(domains_path)
+            if ok and isinstance(loaded, dict):
+                domain_rules = loaded
+        except Exception:
+            pass
     
     allowlist = {}
     allowlist_path = repo_root / "allowlist.yml"
     if allowlist_path.exists():
         try:
-            with open(allowlist_path, "r") as f:
-                allowlist = yaml.safe_load(f) or {}
-        except: pass
+            loaded, ok = _yaml_safe_load(allowlist_path)
+            if ok and isinstance(loaded, dict):
+                allowlist = loaded
+        except Exception:
+            pass
 
     # Config Hash
     config_prep = {"domains": domain_rules, "allowlist": allowlist, "repo": str(repo_root)}
@@ -175,7 +190,7 @@ def main():
     print("✅ Scan complete. Recommended next steps:")
     print("-" * 79)
     print("\n🔹 Start the engine")
-    print("These are the confirmed main entrypoints for this repository:\n")
+    print("These are the recommended main entrypoints for this repository:\n")
     
     main_count = 0
     engine_paths = set()
@@ -185,7 +200,10 @@ def main():
             main_count += 1
             engine_paths.add(ep["path"])
             conf = int(ep["primary_candidate_score"] * 100)
-            print(f"{main_count}. {ep['path']:<50} confidence: {conf}%")
+            recommendation = build_recommendation(ep)
+            print(f"{main_count}. {ep['path']:<50} confidence: {conf}% ({recommendation['label']})")
+            if recommendation.get("guidance"):
+                print(f"   ↳ {recommendation['guidance']}")
             if main_count >= 5: break
 
     if main_count == 0:

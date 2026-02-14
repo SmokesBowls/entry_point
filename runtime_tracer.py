@@ -32,10 +32,15 @@ class RuntimeTracer:
             allowlist_path = self.repo_root / "allowlist.yml"
             if allowlist_path.exists():
                 try:
-                    import yaml
-                    with open(allowlist_path, "r") as f:
-                        allowlist = yaml.safe_load(f)
-                except:
+                    try:
+                        import yaml  # type: ignore
+                    except ImportError:
+                        print("YAML config disabled (PyYAML not installed). Use JSON or install with: pip install pyyaml")
+                        yaml = None
+                    if yaml is not None:
+                        with open(allowlist_path, "r", encoding="utf-8") as f:
+                            allowlist = yaml.safe_load(f) or allowlist
+                except Exception:
                     pass
 
             # sitecustomize.py payload with relational tracing and simulation mode

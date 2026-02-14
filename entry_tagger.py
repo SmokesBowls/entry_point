@@ -73,6 +73,9 @@ class EntryTagger:
             candidate_score = (0.6 * cov_ratio) + (0.4 * role_suitability)
             if not eligible: candidate_score *= 0.5 # Penalty for non-eligible types
 
+            trace_timed_out = getattr(entry, "trace_timed_out", False) if hasattr(entry, "trace_timed_out") else entry.get("trace_timed_out", False)
+            trace_mode = getattr(entry, "trace_mode", None) if hasattr(entry, "trace_mode") else entry.get("trace_mode")
+
             tagged.append({
                 "path": path,
                 "coverage": coverage,
@@ -82,7 +85,9 @@ class EntryTagger:
                 "role_scores": scores,
                 "primary_candidate_score": round(candidate_score, 4),
                 "eligible_for_primary": eligible,
-                "in_engine_scope": in_engine_scope
+                "in_engine_scope": in_engine_scope,
+                "trace_timed_out": trace_timed_out,
+                "trace_mode": trace_mode
             })
         return tagged
 
