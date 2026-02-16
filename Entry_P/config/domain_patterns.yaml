@@ -1,0 +1,31 @@
+domains:
+  animation_pipeline:
+    keywords: ["anim", "rig", "frame", "sprite", "timeline", "mechanimation"]
+    path_patterns: ["**/animation/**", "**/anim/**", "**/mechanimation*/**"]
+  asset_pipeline:
+    keywords: ["asset", "texture", "model", "mesh", "material"]
+    path_patterns: ["**/assets/**", "**/importers/**"]
+  migration_tools:
+    keywords: ["migrate", "migration", "upgrade", "convert"]
+    path_patterns: ["**/migration/**", "**/upgrade/**"]
+  core_engine:
+    keywords: ["engine", "runtime", "core", "kernel"]
+    path_patterns: ["**/core/**", "**/engine/**"]
+  testing:
+    keywords: ["test", "spec", "fixture", "mock"]
+    path_patterns: ["**/tests/**", "**/test/**", "**/spec/**"]
+  documentation:
+    keywords: ["doc", "readme", "guide", "manual"]
+    path_patterns: ["**/docs/**", "**/doc/**"]
+  blender_integration:
+    keywords: ["blender", "addon", "mcp"]
+    path_patterns: ["**/blender/**"]
+  godot_integration:
+    keywords: ["godot", "scene", "gdscript"]
+    path_patterns: ["**/godot*/**"]
+
+intents:
+  archive: ["archive/"]
+  tests: ["tests/", "test_"]
+  tools: ["tools/"]
+  docs: ["docs/", "doc/"]

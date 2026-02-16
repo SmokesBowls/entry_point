@@ -1,0 +1,25 @@
+surface_detection:
+  ignore_patterns:
+    - "archive/**"
+    - "docs/**"
+    - "reports/**"
+    - ".git/**"
+    - "__pycache__/**"
+    - "node_modules/**"
+    - "_quarantine/**"
+  min_python_files: 3
+  split_threshold_py: 20
+
+scope_inference:
+  ignore_folders:
+    - "archive"
+    - "docs"
+    - "tests"
+    - "test"
+    - ".git"
+    - "__pycache__"
+    - "reports"
+    - "node_modules"
+    - "_quarantine"
+  max_scopes: 5
+  confidence_high_threshold: 1

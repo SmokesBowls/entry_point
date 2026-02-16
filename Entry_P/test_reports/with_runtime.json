@@ -1,0 +1,1259 @@
+{
+  "schema_version": "2.2.0",
+  "metadata": {
+    "run_id": "f2cfbcb3-bd7a-4669-adeb-62d4e1caba24",
+    "timestamp": "2026-02-15T17:05:16.756009+00:00",
+    "config_hash": "sha256:97392958bbe2e808c813cc510d7839b1b8ffb7a244469bacf25a9eacb199fd59",
+    "trace": {
+      "trace_mode": "auto",
+      "timeouts": [],
+      "default_timeout": 10,
+      "boot_timeout": 15,
+      "entrypoints": [
+        {
+          "path": "clean.py",
+          "status": "ok",
+          "files_found": 2,
+          "mode": "import-only",
+          "timeout": 10,
+          "blocked_events": []
+        },
+        {
+          "path": "entrypoint_detector.py",
+          "status": "ok",
+          "files_found": 0,
+          "mode": "import-only",
+          "timeout": 15,
+          "blocked_events": []
+        },
+        {
+          "path": "entry_tagger.py",
+          "status": "ok",
+          "files_found": 0,
+          "mode": "import-only",
+          "timeout": 10,
+          "blocked_events": []
+        },
+        {
+          "path": "gui_server.py",
+          "status": "ok",
+          "files_found": 0,
+          "mode": "import-only",
+          "timeout": 15,
+          "blocked_events": []
+        },
+        {
+          "path": "scan.py",
+          "status": "ok",
+          "files_found": 15,
+          "mode": "import-only",
+          "timeout": 10,
+          "blocked_events": []
+        }
+      ]
+    },
+    "engine_scope": [
+      "."
+    ],
+    "engine_target_config": null,
+    "generated_at": "2026-02-15T17:05:17.309313Z",
+    "repo": "/home/burdens/Entry_point_tool/files",
+    "tool": "Repository Integrity Engine",
+    "version": "2.2"
+  },
+  "summary": {
+    "total_files": 22,
+    "active_files": 17,
+    "legacy_files": 5,
+    "runtime_traced": 17,
+    "static_imported": 17,
+    "text_referenced": 21
+  },
+  "layer_1_evidence": {
+    "files": [
+      {
+        "file": "scope_resolver.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "simulation_engine.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "core_engine",
+        "intent": "runtime",
+        "domain_source": "heuristic",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "risk_analyzer.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "graph_engine.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "core_engine",
+        "intent": "runtime",
+        "domain_source": "heuristic",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "entrypoint_detector.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "test_reports/static_only.json",
+        "evidence": [],
+        "confidence": "LOW",
+        "status": "LEGACY",
+        "domain": "testing",
+        "intent": "tests",
+        "domain_source": "heuristic",
+        "surface_id": "test_reports",
+        "surface_root": "test_reports/"
+      },
+      {
+        "file": "validator.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "text_scanner.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "entry_tagger.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "domain_resolver.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "test_reports/usage_index.json",
+        "evidence": [
+          "text_reference"
+        ],
+        "confidence": "LOW-MED",
+        "status": "LEGACY",
+        "domain": "testing",
+        "intent": "tests",
+        "domain_source": "heuristic",
+        "surface_id": "test_reports",
+        "surface_root": "test_reports/"
+      },
+      {
+        "file": "pruning_engine.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "core_engine",
+        "intent": "runtime",
+        "domain_source": "heuristic",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "cartography.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "policy_enforcer.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "runtime_tracer.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "core_engine",
+        "intent": "runtime",
+        "domain_source": "heuristic",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "reporter.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "scan.py",
+        "evidence": [
+          "text_reference"
+        ],
+        "confidence": "LOW-MED",
+        "status": "LEGACY",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "quarantine_engine.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "core_engine",
+        "intent": "runtime",
+        "domain_source": "heuristic",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "gui_server.py",
+        "evidence": [
+          "text_reference"
+        ],
+        "confidence": "LOW-MED",
+        "status": "LEGACY",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "triangulator.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "clean.py",
+        "evidence": [
+          "text_reference"
+        ],
+        "confidence": "LOW-MED",
+        "status": "LEGACY",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      },
+      {
+        "file": "static_analyzer.py",
+        "evidence": [
+          "static_import",
+          "text_reference",
+          "runtime_trace"
+        ],
+        "confidence": "HIGH",
+        "status": "ACTIVE",
+        "domain": "root",
+        "intent": "runtime",
+        "domain_source": "fallback",
+        "surface_id": "_root",
+        "surface_root": "_root/"
+      }
+    ]
+  },
+  "layer_2_structure": {
+    "graph_summary": {
+      "total_nodes": 22,
+      "total_edges": 17,
+      "roots": [
+        "clean.py",
+        "gui_server.py",
+        "scan.py",
+        "test_reports/static_only.json",
+        "test_reports/usage_index.json"
+      ],
+      "leaves_count": 20
+    },
+    "full_graph": {
+      "scope_resolver.py": "set()",
+      "simulation_engine.py": "set()",
+      "risk_analyzer.py": "set()",
+      "graph_engine.py": "set()",
+      "entrypoint_detector.py": "set()",
+      "test_reports/static_only.json": "set()",
+      "validator.py": "set()",
+      "text_scanner.py": "set()",
+      "entry_tagger.py": "set()",
+      "domain_resolver.py": "set()",
+      "test_reports/usage_index.json": "set()",
+      "pruning_engine.py": "set()",
+      "cartography.py": "set()",
+      "policy_enforcer.py": "set()",
+      "runtime_tracer.py": "set()",
+      "reporter.py": "set()",
+      "scan.py": "{'scope_resolver.py', 'policy_enforcer.py', 'graph_engine.py', 'runtime_tracer.py', 'entrypoint_detector.py', 'static_analyzer.py', 'triangulator.py', 'text_scanner.py', 'simulation_engine.py', 'entry_tagger.py', 'domain_resolver.py', 'cartography.py', 'risk_analyzer.py', 'reporter.py', 'validator.py'}",
+      "quarantine_engine.py": "set()",
+      "gui_server.py": "set()",
+      "triangulator.py": "set()",
+      "clean.py": "{'pruning_engine.py', 'quarantine_engine.py'}",
+      "static_analyzer.py": "set()"
+    },
+    "edge_metadata": {},
+    "cartography": {
+      "folders": {
+        ".": {
+          "total_files": 20,
+          "active_files": 17,
+          "legacy_files": 3,
+          "runtime_files": 17,
+          "static_files": 17,
+          "reference_files": 20,
+          "health": "core_runtime",
+          "active_ratio": 0.85,
+          "score_avg": 7.8
+        },
+        "test_reports": {
+          "total_files": 2,
+          "active_files": 0,
+          "legacy_files": 2,
+          "runtime_files": 0,
+          "static_files": 0,
+          "reference_files": 1,
+          "health": "full_removal_candidate",
+          "active_ratio": 0.0,
+          "score_avg": 0.5
+        }
+      },
+      "domains": [
+        {
+          "label": "root",
+          "files": [
+            "cartography.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "domain_resolver.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "entry_tagger.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "entrypoint_detector.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "graph_engine.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "policy_enforcer.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "pruning_engine.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "quarantine_engine.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "reporter.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "risk_analyzer.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "runtime_tracer.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "scope_resolver.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "simulation_engine.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "static_analyzer.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "text_scanner.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "triangulator.py"
+          ],
+          "size": 1
+        },
+        {
+          "label": "root",
+          "files": [
+            "validator.py"
+          ],
+          "size": 1
+        }
+      ]
+    }
+  },
+  "layer_3_entrypoints": {
+    "triangulation": {
+      "coverage_summary": {
+        "total_target": 17,
+        "total_covered": 17,
+        "coverage_ratio": 1.0,
+        "engines_selected": 2
+      },
+      "selected_engines": [
+        {
+          "path": "scan.py",
+          "coverage": {
+            "cover_nodes": 15,
+            "cover_ratio": 0.8823529411764706
+          },
+          "in_engine_scope": true
+        },
+        {
+          "path": "clean.py",
+          "coverage": {
+            "cover_nodes": 2,
+            "cover_ratio": 0.11764705882352941
+          },
+          "in_engine_scope": true
+        }
+      ],
+      "top_ranked": [
+        {
+          "path": "scan.py",
+          "coverage": {
+            "cover_nodes": 15,
+            "cover_ratio": 0.8823529411764706
+          },
+          "in_engine_scope": true
+        },
+        {
+          "path": "clean.py",
+          "coverage": {
+            "cover_nodes": 2,
+            "cover_ratio": 0.11764705882352941
+          },
+          "in_engine_scope": true
+        },
+        {
+          "path": "entry_tagger.py",
+          "coverage": {
+            "cover_nodes": 1,
+            "cover_ratio": 0.058823529411764705
+          },
+          "in_engine_scope": true
+        },
+        {
+          "path": "entrypoint_detector.py",
+          "coverage": {
+            "cover_nodes": 1,
+            "cover_ratio": 0.058823529411764705
+          },
+          "in_engine_scope": true
+        },
+        {
+          "path": "gui_server.py",
+          "coverage": {
+            "cover_nodes": 0,
+            "cover_ratio": 0.0
+          },
+          "in_engine_scope": true
+        }
+      ]
+    },
+    "trace_status": {
+      "trace_mode": "auto",
+      "timeouts": [],
+      "default_timeout": 10,
+      "boot_timeout": 15,
+      "entrypoints": [
+        {
+          "path": "clean.py",
+          "status": "ok",
+          "files_found": 2,
+          "mode": "import-only",
+          "timeout": 10,
+          "blocked_events": []
+        },
+        {
+          "path": "entrypoint_detector.py",
+          "status": "ok",
+          "files_found": 0,
+          "mode": "import-only",
+          "timeout": 15,
+          "blocked_events": []
+        },
+        {
+          "path": "entry_tagger.py",
+          "status": "ok",
+          "files_found": 0,
+          "mode": "import-only",
+          "timeout": 10,
+          "blocked_events": []
+        },
+        {
+          "path": "gui_server.py",
+          "status": "ok",
+          "files_found": 0,
+          "mode": "import-only",
+          "timeout": 15,
+          "blocked_events": []
+        },
+        {
+          "path": "scan.py",
+          "status": "ok",
+          "files_found": 15,
+          "mode": "import-only",
+          "timeout": 10,
+          "blocked_events": []
+        }
+      ]
+    }
+  },
+  "layer_4_policy": {
+    "active_in_archive": [],
+    "imports_from_archive": [],
+    "tests_touching_runtime": {
+      "violations": [],
+      "summary": {
+        "total_violations": 0,
+        "test_files_affected": 0,
+        "by_test_file": {},
+        "by_runtime_module": {}
+      }
+    },
+    "shadowed_modules": [],
+    "cross_surface": {
+      "violations": [],
+      "summary": {
+        "total_cross_edges": 0,
+        "unauthorized": 0,
+        "allowed": 0,
+        "by_pair": {}
+      }
+    }
+  },
+  "phase4_entrypoints": {
+    "classified": [
+      {
+        "path": "scan.py",
+        "coverage": {
+          "cover_nodes": 15,
+          "cover_ratio": 0.8823529411764706
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:tooling_cli"
+        ],
+        "role": "tooling_cli",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 4,
+          "tooling_cli": 13,
+          "test_harness": 4
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.7888,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.8824,
+          "centrality": 1.0,
+          "naming": 0.0,
+          "role": 0.3,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      },
+      {
+        "path": "clean.py",
+        "coverage": {
+          "cover_nodes": 2,
+          "cover_ratio": 0.11764705882352941
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:tooling_cli"
+        ],
+        "role": "tooling_cli",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 0,
+          "tooling_cli": 13,
+          "test_harness": 0
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.3478,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.1176,
+          "centrality": 0.1333,
+          "naming": 0.0,
+          "role": 0.3,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      },
+      {
+        "path": "entrypoint_detector.py",
+        "coverage": {
+          "cover_nodes": 1,
+          "cover_ratio": 0.058823529411764705
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:infrastructure_boot",
+          "behavior:core_logic_driver",
+          "behavior:test_harness"
+        ],
+        "role": "infrastructure_boot",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 4,
+          "tooling_cli": 0,
+          "test_harness": 4
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.3119,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.0588,
+          "centrality": 0.0,
+          "naming": 0.08,
+          "role": 0.3333,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      },
+      {
+        "path": "entry_tagger.py",
+        "coverage": {
+          "cover_nodes": 1,
+          "cover_ratio": 0.058823529411764705
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:tooling_cli"
+        ],
+        "role": "tooling_cli",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 4,
+          "tooling_cli": 8,
+          "test_harness": 4
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.3086,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.0588,
+          "centrality": 0.0,
+          "naming": 0.08,
+          "role": 0.3,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      },
+      {
+        "path": "gui_server.py",
+        "coverage": {
+          "cover_nodes": 0,
+          "cover_ratio": 0.0
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:infrastructure_boot",
+          "behavior:core_logic_driver",
+          "behavior:test_harness"
+        ],
+        "role": "infrastructure_boot",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 4,
+          "tooling_cli": 0,
+          "test_harness": 4
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.2833,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.0,
+          "centrality": 0.0,
+          "naming": 0.0,
+          "role": 0.3333,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      }
+    ],
+    "primary_candidates": [
+      {
+        "path": "scan.py",
+        "coverage": {
+          "cover_nodes": 15,
+          "cover_ratio": 0.8823529411764706
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:tooling_cli"
+        ],
+        "role": "tooling_cli",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 4,
+          "tooling_cli": 13,
+          "test_harness": 4
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.7888,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.8824,
+          "centrality": 1.0,
+          "naming": 0.0,
+          "role": 0.3,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      },
+      {
+        "path": "clean.py",
+        "coverage": {
+          "cover_nodes": 2,
+          "cover_ratio": 0.11764705882352941
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:tooling_cli"
+        ],
+        "role": "tooling_cli",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 0,
+          "tooling_cli": 13,
+          "test_harness": 0
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.3478,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.1176,
+          "centrality": 0.1333,
+          "naming": 0.0,
+          "role": 0.3,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      },
+      {
+        "path": "entrypoint_detector.py",
+        "coverage": {
+          "cover_nodes": 1,
+          "cover_ratio": 0.058823529411764705
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:infrastructure_boot",
+          "behavior:core_logic_driver",
+          "behavior:test_harness"
+        ],
+        "role": "infrastructure_boot",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 4,
+          "tooling_cli": 0,
+          "test_harness": 4
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.3119,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.0588,
+          "centrality": 0.0,
+          "naming": 0.08,
+          "role": 0.3333,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      },
+      {
+        "path": "entry_tagger.py",
+        "coverage": {
+          "cover_nodes": 1,
+          "cover_ratio": 0.058823529411764705
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:tooling_cli"
+        ],
+        "role": "tooling_cli",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 4,
+          "tooling_cli": 8,
+          "test_harness": 4
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.3086,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.0588,
+          "centrality": 0.0,
+          "naming": 0.08,
+          "role": 0.3,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      },
+      {
+        "path": "gui_server.py",
+        "coverage": {
+          "cover_nodes": 0,
+          "cover_ratio": 0.0
+        },
+        "intent_tags": [
+          "intent:runtime"
+        ],
+        "behavior_tags": [
+          "behavior:infrastructure_boot",
+          "behavior:core_logic_driver",
+          "behavior:test_harness"
+        ],
+        "role": "infrastructure_boot",
+        "role_scores": {
+          "infrastructure_boot": 4,
+          "core_logic_driver": 4,
+          "tooling_cli": 0,
+          "test_harness": 4
+        },
+        "eligible_for_primary": true,
+        "primary_candidate_score": 0.2833,
+        "in_engine_scope": true,
+        "trace_status": "ok",
+        "blocked_events": [],
+        "score_breakdown": {
+          "coverage": 0.0,
+          "centrality": 0.0,
+          "naming": 0.0,
+          "role": 0.3333,
+          "has_main": true,
+          "runtime_bonus": 0.15
+        },
+        "domain": "root",
+        "scope": "root",
+        "surface_id": "_root"
+      }
+    ]
+  },
+  "policy_violations": {
+    "active_in_archive": [],
+    "imports_from_archive": [],
+    "tests_touching_runtime": {
+      "violations": [],
+      "summary": {
+        "total_violations": 0,
+        "test_files_affected": 0,
+        "by_test_file": {},
+        "by_runtime_module": {}
+      }
+    },
+    "shadowed_modules": [],
+    "cross_surface": {
+      "violations": [],
+      "summary": {
+        "total_cross_edges": 0,
+        "unauthorized": 0,
+        "allowed": 0,
+        "by_pair": {}
+      }
+    }
+  },
+  "cartography_data": {
+    "domains": [
+      {
+        "label": "root",
+        "files": [
+          "cartography.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "domain_resolver.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "entry_tagger.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "entrypoint_detector.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "graph_engine.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "policy_enforcer.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "pruning_engine.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "quarantine_engine.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "reporter.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "risk_analyzer.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "runtime_tracer.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "scope_resolver.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "simulation_engine.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "static_analyzer.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "text_scanner.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "triangulator.py"
+        ],
+        "size": 1
+      },
+      {
+        "label": "root",
+        "files": [
+          "validator.py"
+        ],
+        "size": 1
+      }
+    ]
+  },
+  "scan_stats": {
+    "files_scanned": 22,
+    "entrypoints_detected": 5,
+    "runtime_traced": 17,
+    "static_imports": 17,
+    "trace_enabled": true
+  },
+  "engine_coverage": 1.0,
+  "active_in_archive": [],
+  "surfaces": {
+    "surfaces": {},
+    "metrics": {},
+    "cross_edges": {
+      "count": 0,
+      "by_pair": {}
+    }
+  },
+  "engine_target_config": null
+}
