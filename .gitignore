@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.uacf_undo/
+reports/
+Entry_P/reports/
+Entry_P/test_reports/
+*.log
