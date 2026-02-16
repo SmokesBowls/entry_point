@@ -5,3 +5,8 @@ reports/
 Entry_P/reports/
 Entry_P/test_reports/
 *.log
+__pycache__/
+*.pyc
+.uacf_undo/
+reports/
+*.log
